@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Shared\Domain\ValueObject;
 
+use App\Service\ExchangeRate\Exception\RateNotFoundException;
 use App\Service\ExchangeRate\ExchangeRateCalculator;
 use Money\Currency;
 use Money\Money;
@@ -29,7 +30,7 @@ final class ExchangeRateCalculatorTest extends TestCase
         $conversionResult = $this->object->convert(
             Money::EUR(100),
             new Currency('EUR'),
-            new Currency('PLN')
+            new Currency('PLN'),
         );
 
         $this->assertInstanceOf(
@@ -39,7 +40,19 @@ final class ExchangeRateCalculatorTest extends TestCase
 
         $this->assertEquals(
             447,
-            $conversionResult->getAmount()
+            $conversionResult->getAmount(),
+        );
+    }
+
+    public function testException(): void
+    {
+        $this->expectException(RateNotFoundException::class);
+        $this->expectExceptionMessage('Conversion rate for USD not found');
+
+        $this->object->convert(
+            Money::EUR(100),
+            new Currency('EUR'),
+            new Currency('USD'),
         );
     }
 }
