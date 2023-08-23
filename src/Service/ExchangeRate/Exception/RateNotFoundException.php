@@ -9,7 +9,7 @@ use Throwable;
 
 final class RateNotFoundException extends Exception
 {
-    public function __construct(string $currencyCode, $code = 0, Throwable $previous = null)
+    public function __construct(string $currencyCode, $code = 0, ?Throwable $previous = null)
     {
         parent::__construct(sprintf('Conversion rate for %s not found', $currencyCode), $code, $previous);
     }

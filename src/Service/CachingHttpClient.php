@@ -24,10 +24,8 @@ final class CachingHttpClient implements HttpClientInterface
 
     public function request(string $method, string $url, array $options = []): ResponseInterface
     {
-        $requestHash = $this->getRequestHash($method, $url, $options);
-
         [$content, $statusCode, $headers] = $this->cache->get(
-            $requestHash,
+            $this->getRequestHash($method, $url, $options),
             function (ItemInterface $item) use ($method, $url, $options): array {
                 $item->expiresAfter($this->httpCacheTtl);
 

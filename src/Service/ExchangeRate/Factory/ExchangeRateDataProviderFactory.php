@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Service\ExchangeRate\Factory;
 
 use App\Service\ExchangeRate\DataProvider\DataProviderInterface;
+use App\Service\ExchangeRate\Exception\ProviderNotFoundException;
 use App\Service\ExchangeRate\ExchangeRateCalculator;
-use Exception;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
 class ExchangeRateDataProviderFactory
@@ -26,6 +26,6 @@ class ExchangeRateDataProviderFactory
             }
         }
 
-        throw new Exception('Provider not found');
+        throw new ProviderNotFoundException($dataProvider);
     }
 }
