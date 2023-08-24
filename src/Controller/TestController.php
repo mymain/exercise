@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Transaction;
+use App\Enum\PaymentMethod;
+use App\Enum\TransactionType;
 use App\Repository\TransactionRepository;
 use App\Service\ExchangeRate\DataProvider\ExchangeRatesApiDataProvider;
 use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
@@ -46,8 +48,8 @@ class TestController
         $transaction->targetCurrency = $targetCurrency->getCode();
         $transaction->baseAmount = $baseAmount;
         $transaction->targetAmount = (int) $converted->getAmount();
-        $transaction->paymentMethod = 'card';
-        $transaction->transactionType = 'deposit';
+        $transaction->paymentMethod = PaymentMethod::CARD->value;
+        $transaction->transactionType = TransactionType::DEPOSIT->value;
         $transaction->exchangeRate = 'tbd';
         $transaction->ip = 'tbd';
         $transaction->transactionTimestamp = 1;
