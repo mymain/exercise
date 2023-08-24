@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Transaction;
-use App\Enum\PaymentMethod;
-use App\Enum\TransactionType;
 use App\Factory\TransactionFactory;
 use App\Repository\TransactionRepository;
 use App\Service\ExchangeRate\DataProvider\ExchangeRatesApiDataProvider;
@@ -32,9 +29,7 @@ class TestController
     #[Route('/test')]
     public function test(Request $request): Response
     {
-        $provider = $this->exchangeRateDataProviderFactory->getDataProvider(
-            ExchangeRatesApiDataProvider::PROVIDER,
-        );
+        $provider = $this->exchangeRateDataProviderFactory->getDataProvider();
 
         $exchangeConversionResult = $provider->convert(
             baseAmount:  new Money(100000000, new Currency($this->baseCurrency)),

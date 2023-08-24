@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Exchange</h1>
+
+    {% block content %}
+        <form method="post" action="/transaction/exchange">
+            <label for="base-currency">Base currency</label>
+            <select id="base-currency" name="baseCurrency">
+                {% for currency in currencies %}
+                    <option value="{{ currency.code }}">{{ currency.code }}</option>
+                {% endfor %}
+            </select>
+            <label for="base-amount">Base amount</label>
+            <input id="base-amount" name="baseAmount" type="number" value="100">
+            <label for="target-currency">Target currency</label>
+            <select id="target-currency" name="targetCurrency">
+                {% for currency in currencies %}
+                    <option value="{{ currency.code }}">{{ currency.code }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Exchange!</button>
+        </form>
+    {% endblock %}
+{% endblock %}

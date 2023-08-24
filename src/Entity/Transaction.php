@@ -14,7 +14,7 @@ class Transaction
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int $id;
+    public int $id;
 
     #[ORM\Column(length: 32)]
     public string $paymentMethod;
