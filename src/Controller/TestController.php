@@ -7,12 +7,14 @@ namespace App\Controller;
 use App\Entity\Transaction;
 use App\Enum\PaymentMethod;
 use App\Enum\TransactionType;
+use App\Factory\TransactionFactory;
 use App\Repository\TransactionRepository;
 use App\Service\ExchangeRate\DataProvider\ExchangeRatesApiDataProvider;
 use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
 use Money\Currency;
 use Money\Money;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,39 +25,30 @@ class TestController
         #[Autowire(env: 'BASE_CURRENCY')]
         private readonly string $baseCurrency,
         private readonly TransactionRepository $transactionRepository,
+        private readonly TransactionFactory $transactionFactory,
     ) {
     }
 
     #[Route('/test')]
-    public function test(): Response
+    public function test(Request $request): Response
     {
         $provider = $this->exchangeRateDataProviderFactory->getDataProvider(
-            ExchangeRatesApiDataProvider::PROVIDER
+            ExchangeRatesApiDataProvider::PROVIDER,
         );
 
-        $baseCurrency = new Currency($this->baseCurrency);
-        $targetCurrency = new Currency('EUR');
-        $baseAmount = 100;
-        $amount = new Money($baseAmount, $baseCurrency);
-        $converted = $provider->convert(
-            $amount,
-            $baseCurrency,
-            $targetCurrency,
+        $exchangeConversionResult = $provider->convert(
+            baseAmount:  new Money(100000000, new Currency($this->baseCurrency)),
+            baseCurrency: new Currency($this->baseCurrency),
+            targetCurrency: new Currency('BTC'),
         );
 
-        $transaction = new Transaction();
-        $transaction->baseCurrency = $baseCurrency->getCode();
-        $transaction->targetCurrency = $targetCurrency->getCode();
-        $transaction->baseAmount = $baseAmount;
-        $transaction->targetAmount = (int) $converted->getAmount();
-        $transaction->paymentMethod = PaymentMethod::CARD->value;
-        $transaction->transactionType = TransactionType::DEPOSIT->value;
-        $transaction->exchangeRate = 'tbd';
-        $transaction->ip = 'tbd';
-        $transaction->transactionTimestamp = 1;
+        $this->transactionRepository->save(
+            $this->transactionFactory->fromExchangeConversionResult(
+                exchangeRateConversionResult: $exchangeConversionResult,
+                ip: $request->getClientIp(),
+            ),
+        );
 
-        $this->transactionRepository->save($transaction);
-
-        dd('done', $converted);
+        dd('done', $exchangeConversionResult);
     }
 }

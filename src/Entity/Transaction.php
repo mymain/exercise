@@ -37,8 +37,8 @@ class Transaction
     #[ORM\Column(length: 3)]
     public string $targetCurrency;
 
-    #[ORM\Column(length: 32)]
-    public string $exchangeRate;
+    #[ORM\Column(type: Types::FLOAT)]
+    public float $exchangeRate;
 
     #[ORM\Column(length: 128)]
     public string $ip;

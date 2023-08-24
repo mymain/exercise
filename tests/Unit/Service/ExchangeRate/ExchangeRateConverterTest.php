@@ -5,20 +5,20 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Shared\Domain\ValueObject;
 
 use App\Service\ExchangeRate\Exception\RateNotFoundException;
-use App\Service\ExchangeRate\ExchangeRateCalculator;
+use App\Service\ExchangeRate\Result\ExchangeRateConversionResult;
+use App\Service\ExchangeRate\ExchangeRateConverter;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 
-final class ExchangeRateCalculatorTest extends TestCase
+final class ExchangeRateConverterTest extends TestCase
 {
-    private ExchangeRateCalculator $object;
+    private ExchangeRateConverter $object;
 
     public function setUp(): void
     {
-        $this->object = new ExchangeRateCalculator(
-            baseCurrency: 'EUR',
-            timestamp: 123,
+        $this->object = new ExchangeRateConverter(
+            baseCurrency: new Currency('EUR'),
             rates: [
                 'PLN' => 4.46698,
             ]
@@ -34,13 +34,13 @@ final class ExchangeRateCalculatorTest extends TestCase
         );
 
         $this->assertInstanceOf(
-            Money::class,
+            ExchangeRateConversionResult::class,
             $conversionResult,
         );
 
         $this->assertEquals(
             447,
-            $conversionResult->getAmount(),
+            $conversionResult->targetAmount->getAmount(),
         );
     }
 

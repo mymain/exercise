@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Service\ExchangeRate\DataProvider;
 
 use App\Service\CachingHttpClient;
-use App\Service\ExchangeRate\ExchangeRateCalculator;
+use App\Service\ExchangeRate\ExchangeRateConverter;
+use Money\Currency;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -26,7 +27,7 @@ final class ExchangeRatesApiDataProvider implements DataProviderInterface
     ) {
     }
 
-    public function getExchangeRateCalculator(): ExchangeRateCalculator
+    public function getExchangeRateCalculator(): ExchangeRateConverter
     {
         $response = $this->httpClient->request(
             Request::METHOD_GET,
@@ -38,9 +39,8 @@ final class ExchangeRatesApiDataProvider implements DataProviderInterface
             )
         )->toArray();
 
-        return new ExchangeRateCalculator(
-            $response['base'],
-            $response['timestamp'],
+        return new ExchangeRateConverter(
+            new Currency($response['base']),
             $response['rates'],
         );
     }
