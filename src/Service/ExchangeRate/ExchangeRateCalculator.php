@@ -25,10 +25,10 @@ final class ExchangeRateCalculator
         return $this->timestamp;
     }
 
-    public function convert(Money $amount, Currency $from, Currency $to): Money
+    public function convert(Money $amount, Currency $baseCurrency, Currency $targetCurrency): Money
     {
-        $toCode = $to->getCode();
-        $fromCode = $from->getCode();
+        $toCode = $targetCurrency->getCode();
+        $fromCode = $baseCurrency->getCode();
 
         if (!isset($this->rates[$toCode])) {
             throw new RateNotFoundException($toCode);

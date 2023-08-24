@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Transaction;
+use App\Repository\TransactionRepository;
 use App\Service\ExchangeRate\DataProvider\ExchangeRatesApiDataProvider;
 use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
 use Money\Currency;
@@ -18,6 +20,7 @@ class TestController
         private readonly ExchangeRateDataProviderFactory $exchangeRateDataProviderFactory,
         #[Autowire(env: 'BASE_CURRENCY')]
         private readonly string $baseCurrency,
+        private readonly TransactionRepository $transactionRepository,
     ) {
     }
 
@@ -28,12 +31,29 @@ class TestController
             ExchangeRatesApiDataProvider::PROVIDER
         );
 
+        $baseCurrency = new Currency($this->baseCurrency);
+        $targetCurrency = new Currency('EUR');
+        $baseAmount = 100;
+        $amount = new Money($baseAmount, $baseCurrency);
         $converted = $provider->convert(
-            new Money('100', new Currency($this->baseCurrency)),
-            new Currency('EUR'),
-            new Currency('EUR'),
+            $amount,
+            $baseCurrency,
+            $targetCurrency,
         );
 
-        dd($converted, 'done');
+        $transaction = new Transaction();
+        $transaction->baseCurrency = $baseCurrency->getCode();
+        $transaction->targetCurrency = $targetCurrency->getCode();
+        $transaction->baseAmount = $baseAmount;
+        $transaction->targetAmount = (int) $converted->getAmount();
+        $transaction->paymentMethod = 'card';
+        $transaction->transactionType = 'deposit';
+        $transaction->exchangeRate = 'tbd';
+        $transaction->ip = 'tbd';
+        $transaction->transactionTimestamp = 1;
+
+        $this->transactionRepository->save($transaction);
+
+        dd('done', $converted);
     }
 }

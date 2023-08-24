@@ -6,10 +6,10 @@ services:
       container_name: exercise-mysql
       command: --default-authentication-plugin=mysql_native_password
       environment:
-        - MYSQL_ROOT_PASSWORD=exerise
-        - MYSQL_DATABASE=exerise
-        - MYSQL_USER=exerise
-        - MYSQL_PASSWORD=exerise
+        - MYSQL_ROOT_PASSWORD=exercise
+        - MYSQL_DATABASE=exercise
+        - MYSQL_USER=exercise
+        - MYSQL_PASSWORD=exercise
       ports:
         - "9000:3306"
       volumes:

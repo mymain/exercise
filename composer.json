@@ -10,6 +10,9 @@
     "ext-bcmath": "*",
     "ext-ctype": "*",
     "ext-iconv": "*",
+    "doctrine/doctrine-bundle": "^2.10",
+    "doctrine/doctrine-migrations-bundle": "^3.2",
+    "doctrine/orm": "^2.16",
     "moneyphp/money": "^3.3",
     "symfony/cache": "6.3.*",
     "symfony/console": "6.3.*",
@@ -74,6 +77,7 @@
     "squizlabs/php_codesniffer": "^3.7",
     "symfony/browser-kit": "6.3.*",
     "symfony/css-selector": "6.3.*",
+    "symfony/maker-bundle": "^1.50",
     "symfony/phpunit-bridge": "^6.3"
   }
 }
