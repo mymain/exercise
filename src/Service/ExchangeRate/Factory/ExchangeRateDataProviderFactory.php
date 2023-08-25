@@ -19,7 +19,7 @@ class ExchangeRateDataProviderFactory
     }
 
     public function getDataProvider(
-        string $dataProvider = ExchangeRatesApiDataProvider::PROVIDER
+        string $dataProvider = ExchangeRatesApiDataProvider::PROVIDER,
     ): ExchangeRateConverter {
         /** @var DataProviderInterface $provider */
         foreach ($this->providers as $provider) {

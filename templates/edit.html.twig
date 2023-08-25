@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% block content %}
+        <h2>Transactions edit #{{ transaction.id }}</h2>
+        <form method="post" action="/transaction-update/{{ transaction.id }}">
+            <label for="target-currency">Target currency</label>
+            <select id="target-currency" name="targetCurrency">
+                {% for currency in currencies %}
+                    <option {% if transaction.targetCurrency == currency %}
+                            selected="selected"
+                            {% endif %}
+                            value="{{ currency.code }}">
+                        {{ currency.code }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button type="submit">Update!</button>
+        </form>
+    {% endblock %}
+{% endblock %}

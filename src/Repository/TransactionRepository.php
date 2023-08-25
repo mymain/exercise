@@ -31,11 +31,17 @@ final class TransactionRepository extends ServiceEntityRepository
             ->orderBy('t.id', $sort);
     }
 
-    public function save(Transaction $transaction): void
+    public function persist(Transaction $transaction, bool $flush = true): void
     {
-        $entityManager = $this->getEntityManager();
+        $this->getEntityManager()->persist($transaction);
 
-        $entityManager->persist($transaction);
-        $entityManager->flush();
+        if ($flush) {
+            $this->flush();
+        }
+    }
+
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
     }
 }

@@ -16,6 +16,7 @@
                     <th>Target currency</th>
                     <th>Exchange rate</th>
                     <th>IP</th>
+                    <td>&nbsp;</td>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,7 @@
                         <td>{{ transaction.targetCurrency }}</td>
                         <td>{{ transaction.exchangeRate }}</td>
                         <td>{{ transaction.ip }}</td>
+                        <td><a href="/transaction-edit/{{ transaction.id }}">Edit</a></td>
                     </tr>
                 {% endfor %}
             </tbody>
