@@ -7,9 +7,8 @@ namespace App\Controller;
 use App\Dto\ExchangeMoneyDto;
 use App\Factory\TransactionFactory;
 use App\Repository\TransactionRepository;
-use App\Service\ExchangeRate\DataProvider\ExchangeRatesApiDataProvider;
+use App\Service\ExchangeRate\Exception\RateNotFoundException;
 use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
-use Money\Currencies\ISOCurrencies;
 use Money\Currency;
 use Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
-class TransactionController extends AbstractController
+#[Route('exchange', methods: Request::METHOD_POST)]
+final class ExchangeController extends AbstractController
 {
     public function __construct(
         #[Autowire(env: 'BASE_CURRENCY')]
@@ -30,27 +30,22 @@ class TransactionController extends AbstractController
     ) {
     }
 
-    #[Route('/')]
-    public function index(): Response
-    {
-        return $this->render('index.html.twig', [
-            'currencies' => new ISOCurrencies(),
-        ]);
-    }
-
-    #[Route('transaction/exchange')]
-    public function exchange(
+    public function __invoke(
         Request $request,
         #[MapRequestPayload]
         ExchangeMoneyDto $exchangeMoneyDto,
     ): Response {
         $provider = $this->exchangeRateDataProviderFactory->getDataProvider();
 
-        $exchangeConversionResult = $provider->convert(
-            baseAmount:  new Money($exchangeMoneyDto->baseAmount, new Currency($exchangeMoneyDto->baseCurrency)),
-            baseCurrency: new Currency($this->baseCurrency),
-            targetCurrency: new Currency($exchangeMoneyDto->targetCurrency),
-        );
+        try {
+            $exchangeConversionResult = $provider->convert(
+                baseAmount: new Money($exchangeMoneyDto->baseAmount, new Currency($exchangeMoneyDto->baseCurrency)),
+                baseCurrency: new Currency($this->baseCurrency),
+                targetCurrency: new Currency($exchangeMoneyDto->targetCurrency),
+            );
+        } catch (RateNotFoundException $e) {
+            return $this->json('error', Response::HTTP_BAD_REQUEST);
+        }
 
         $transaction = $this->transactionFactory->fromExchangeConversionResult(
             exchangeRateConversionResult: $exchangeConversionResult,

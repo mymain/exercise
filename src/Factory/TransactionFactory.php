@@ -9,7 +9,7 @@ use App\Enum\PaymentMethod;
 use App\Enum\TransactionType;
 use App\Service\ExchangeRate\Result\ExchangeRateConversionResult;
 
-class TransactionFactory
+final class TransactionFactory
 {
     public function fromExchangeConversionResult(
         ExchangeRateConversionResult $exchangeRateConversionResult,

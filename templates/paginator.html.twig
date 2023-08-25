@@ -1,0 +1,9 @@
+{% if paginator.lastPage > 1 %}
+    <ul>
+        {% for i in 1..paginator.lastPage %}
+            <li>
+                <a href="/transaction-list?page={{ i }}">{{ i }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}

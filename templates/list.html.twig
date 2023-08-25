@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% block content %}
+        <h2>Transactions list page: {{ paginator.getPaginationDto.page }}</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Payment method</th>
+                    <th>Transaction type</th>
+                    <th>Transaction timestamp</th>
+                    <th>Base amount</th>
+                    <th>Base currency</th>
+                    <th>Target amount</th>
+                    <th>Target currency</th>
+                    <th>Exchange rate</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in paginator.items %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.paymentMethod }}</td>
+                        <td>{{ transaction.transactionType }}</td>
+                        <td>{{ transaction.transactionTimestamp }}</td>
+                        <td>{{ transaction.baseAmount }}</td>
+                        <td>{{ transaction.baseCurrency }}</td>
+                        <td>{{ transaction.targetAmount }}</td>
+                        <td>{{ transaction.targetCurrency }}</td>
+                        <td>{{ transaction.exchangeRate }}</td>
+                        <td>{{ transaction.ip }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% include 'paginator.html.twig' %}
+    {% endblock %}
+{% endblock %}
