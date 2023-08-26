@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Dto\PaginationDto;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
 
 final class Paginator
@@ -17,9 +17,9 @@ final class Paginator
     private int $lastPage;
 
     public function paginate(
-        QueryBuilder $query,
+        Query $query,
         PaginationDto $paginationDto,
-        int $limit = self::ITEMS_PER_PAGE
+        int $limit = self::ITEMS_PER_PAGE,
     ): self {
         $paginator = new OrmPaginator($query);
 

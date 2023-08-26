@@ -25,4 +25,8 @@ RUN docker-php-ext-install \
 # Install Redis extension
 RUN pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis
 
+# Install APCU extension
+RUN pecl install apcu \
+    && docker-php-ext-enable apcu
+
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

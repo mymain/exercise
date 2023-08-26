@@ -7,7 +7,7 @@ namespace App\Repository;
 use App\Entity\Transaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -25,10 +25,11 @@ final class TransactionRepository extends ServiceEntityRepository
         parent::__construct($registry, Transaction::class);
     }
 
-    public function getTransactionsQueryBuilder(string $sort = Criteria::DESC): QueryBuilder
+    public function getTransactionsQuery(string $sort = Criteria::DESC): Query
     {
         return $this->createQueryBuilder('t')
-            ->orderBy('t.id', $sort);
+            ->orderBy('t.id', $sort)
+            ->getQuery();
     }
 
     public function persist(Transaction $transaction, bool $flush = true): void

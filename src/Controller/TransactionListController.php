@@ -28,7 +28,7 @@ final class TransactionListController extends AbstractController
     ): Response {
         return $this->render('list.html.twig', [
             'paginator' => $this->paginator->paginate(
-                $this->transactionRepository->getTransactionsQueryBuilder(),
+                $this->transactionRepository->getTransactionsQuery(),
                 $paginationDto,
             ),
         ]);

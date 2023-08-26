@@ -23,8 +23,6 @@ use Symfony\Component\Routing\Annotation\Route;
 final class ExchangeController extends AbstractController
 {
     public function __construct(
-        #[Autowire(env: 'BASE_CURRENCY')]
-        private readonly string $baseCurrency,
         private readonly ExchangeRateDataProviderFactory $exchangeRateDataProviderFactory,
         private readonly TransactionRepository $transactionRepository,
         private readonly TransactionFactory $transactionFactory,
@@ -41,11 +39,11 @@ final class ExchangeController extends AbstractController
 
             $exchangeConversionResult = $provider->convert(
                 baseAmount: new Money($exchangeMoneyDto->baseAmount, new Currency($exchangeMoneyDto->baseCurrency)),
-                baseCurrency: new Currency($this->baseCurrency),
+                baseCurrency: new Currency($exchangeMoneyDto->baseCurrency),
                 targetCurrency: new Currency($exchangeMoneyDto->targetCurrency),
             );
-        } catch (RateNotFoundException|ProviderNotFoundException) {
-            return $this->json('error', Response::HTTP_FAILED_DEPENDENCY);
+        } catch (RateNotFoundException | ProviderNotFoundException) {
+            return $this->json('error', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $transaction = $this->transactionFactory->fromExchangeConversionResult(

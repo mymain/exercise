@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Shared\Domain\ValueObject;
+namespace App\Tests\Unit\Service\ExchangeRate;
 
 use App\Service\ExchangeRate\Exception\RateNotFoundException;
 use App\Service\ExchangeRate\Result\ExchangeRateConversionResult;

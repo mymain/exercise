@@ -7,7 +7,7 @@ namespace App\Service\ExchangeRate\Result;
 use Money\Currency;
 use Money\Money;
 
-final class ExchangeRateConversionResult
+final class ExchangeRateConversionResult implements ExchangeRateConversionResultInterface
 {
     public function __construct(
         public readonly Currency $baseCurrency,

@@ -6,6 +6,7 @@ namespace App\Service\ExchangeRate\DataProvider;
 
 use App\Service\CachingHttpClient;
 use App\Service\ExchangeRate\ExchangeRateConverter;
+use App\Service\ExchangeRate\ExchangeRateConverterInterface;
 use Money\Currency;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +28,7 @@ final class ExchangeRatesApiDataProvider implements DataProviderInterface
     ) {
     }
 
-    public function getExchangeRateCalculator(): ExchangeRateConverter
+    public function getExchangeRateConverter(): ExchangeRateConverterInterface
     {
         $response = $this->httpClient->request(
             Request::METHOD_GET,

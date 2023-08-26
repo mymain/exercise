@@ -46,7 +46,7 @@ final class TransactionUpdateController extends AbstractController
             $transaction->exchangeRate = $exchangeConversionResult->exchangeRate;
 
             $this->transactionRepository->flush();
-        } catch (RateNotFoundException|ProviderNotFoundException) {
+        } catch (RateNotFoundException | ProviderNotFoundException) {
             return $this->json('error', Response::HTTP_FAILED_DEPENDENCY);
         }
 
