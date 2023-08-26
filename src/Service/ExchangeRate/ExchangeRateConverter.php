@@ -30,23 +30,18 @@ final class ExchangeRateConverter implements ExchangeRateConverterInterface
         $fromCode = $baseCurrency->getCode();
         $targetAmount = clone $baseAmount;
 
-        if (!isset($this->rates[$toCode])) {
-            throw new RateNotFoundException($toCode);
-        }
+        $toRate = $this->rates[$toCode] ?? throw new RateNotFoundException($toCode);
+        $fromRate = $this->rates[$fromCode] ?? throw new RateNotFoundException($fromCode);
 
-        if (!isset($this->rates[$fromCode])) {
-            throw new RateNotFoundException($fromCode);
-        }
-
-        $targetAmount = $targetAmount->multiply($this->rates[$toCode] * self::MULTIPLIER)
-            ->divide($this->rates[$fromCode] * self::MULTIPLIER);
+        $targetAmount = $targetAmount->multiply($toRate * self::MULTIPLIER)
+            ->divide($fromRate * self::MULTIPLIER);
 
         return new ExchangeRateConversionResult(
             baseCurrency: $baseCurrency,
             targetCurrency: $targetCurrency,
             baseAmount: $baseAmount,
             targetAmount: $targetAmount,
-            exchangeRate: $this->rates[$toCode] / $this->rates[$fromCode],
+            exchangeRate: $toRate / $fromRate,
         );
     }
 }

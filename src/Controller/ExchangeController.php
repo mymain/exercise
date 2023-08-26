@@ -13,7 +13,6 @@ use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
 use Money\Currency;
 use Money\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;

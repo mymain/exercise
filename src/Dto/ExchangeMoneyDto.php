@@ -12,7 +12,7 @@ final class ExchangeMoneyDto
         #[Assert\Currency]
         #[Assert\NotBlank]
         public readonly string $baseCurrency,
-        #[Assert\GreaterThan(1)]
+        #[Assert\GreaterThan(0)]
         #[Assert\NotBlank]
         public readonly float $baseAmount,
         #[Assert\Currency]
