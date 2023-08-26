@@ -23,10 +23,12 @@
     "symfony/framework-bundle": "6.3.*",
     "symfony/http-client": "6.3.*",
     "symfony/intl": "6.3.*",
+    "symfony/messenger": "6.3.*",
     "symfony/property-access": "6.3.*",
     "symfony/property-info": "6.3.*",
     "symfony/runtime": "6.3.*",
     "symfony/serializer": "6.3.*",
+    "symfony/stopwatch": "6.3.*",
     "symfony/twig-bundle": "6.3.*",
     "symfony/validator": "6.3.*",
     "symfony/yaml": "6.3.*"
@@ -87,7 +89,6 @@
     "symfony/css-selector": "6.3.*",
     "symfony/maker-bundle": "^1.50",
     "symfony/phpunit-bridge": "^6.3",
-    "symfony/stopwatch": "6.3.*",
     "symfony/web-profiler-bundle": "6.3.*"
   }
 }

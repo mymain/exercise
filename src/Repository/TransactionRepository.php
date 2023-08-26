@@ -5,24 +5,22 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Transaction;
+use App\Repository\Exception\TransactionNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Transaction>
- *
- * @method Transaction|null find($id, $lockMode = null, $lockVersion = null)
- * @method Transaction|null findOneBy(array $criteria, array $orderBy = null)
- * @method Transaction[]    findAll()
- * @method Transaction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 final class TransactionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Transaction::class);
+    }
+
+    public function findById(int $id): Transaction
+    {
+        return $this->find($id) ?? throw new TransactionNotFoundException($id);
     }
 
     public function getTransactionsQuery(string $sort = Criteria::DESC): Query

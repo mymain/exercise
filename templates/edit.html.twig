@@ -3,7 +3,8 @@
 {% block body %}
     {% block content %}
         <h2>Transactions edit #{{ transaction.id }}</h2>
-        <form method="post" action="/transaction-update/{{ transaction.id }}">
+        <form method="post" action="/transaction-update">
+            <input type="hidden" name="transactionId" value="{{ transaction.id }}"/>
             <label for="target-currency">Target currency</label>
             <select id="target-currency" name="targetCurrency">
                 {% for currency in currencies %}

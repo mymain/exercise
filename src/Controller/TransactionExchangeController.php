@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Messenger\Command\TransactionUpdateCommand;
-use App\Dto\TransactionUpdateDto;
+use App\Messenger\Command\TransactionExchangeCommand;
+use App\Dto\TransactionExchangeDto;
 use App\Entity\Transaction;
 use App\Trait\GetEnvelopeResult;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,8 +16,8 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/transaction-update', methods:[Request::METHOD_POST])]
-final class TransactionUpdateController extends AbstractController
+#[Route('exchange', methods: Request::METHOD_POST)]
+final class TransactionExchangeController extends AbstractController
 {
     use GetEnvelopeResult;
 
@@ -27,12 +27,14 @@ final class TransactionUpdateController extends AbstractController
     }
 
     public function __invoke(
+        Request $request,
         #[MapRequestPayload]
-        TransactionUpdateDto $transactionUpdateDto,
+        TransactionExchangeDto $exchangeDto,
     ): Response {
         try {
-            $envelope = $this->commandBus->dispatch(new TransactionUpdateCommand(
-                transactionUpdateDto: $transactionUpdateDto,
+            $envelope = $this->commandBus->dispatch(new TransactionExchangeCommand(
+                exchangeDto: $exchangeDto,
+                ip: $request->getClientIp(),
             ));
 
             /** @var Transaction $transaction */
