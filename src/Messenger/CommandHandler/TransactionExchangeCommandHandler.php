@@ -29,12 +29,15 @@ final class TransactionExchangeCommandHandler
     public function __invoke(TransactionExchangeCommand $command): Transaction
     {
         $provider = $this->exchangeRateDataProviderFactory->getDataProvider();
-        $exchangeMoneyDto = $command->exchangeDto;
+        $transactionExchangeDto = $command->transactionExchangeDto;
 
         $exchangeConversionResult = $provider->convert(
-            baseAmount: new Money($exchangeMoneyDto->baseAmount, new Currency($exchangeMoneyDto->baseCurrency)),
-            baseCurrency: new Currency($exchangeMoneyDto->baseCurrency),
-            targetCurrency: new Currency($exchangeMoneyDto->targetCurrency),
+            baseAmount: new Money(
+                $transactionExchangeDto->baseAmount,
+                new Currency($transactionExchangeDto->baseCurrency)
+            ),
+            baseCurrency: new Currency($transactionExchangeDto->baseCurrency),
+            targetCurrency: new Currency($transactionExchangeDto->targetCurrency),
         );
 
         $transaction = $this->transactionFactory->fromExchangeConversionResult(

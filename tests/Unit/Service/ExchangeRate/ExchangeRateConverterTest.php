@@ -40,7 +40,7 @@ final class ExchangeRateConverterTest extends TestCase
 
         $this->assertEquals(
             447,
-            $conversionResult->targetAmount->getAmount(),
+            $conversionResult->getTargetAmount()->getAmount(),
         );
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Cli;
 
 use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 #[AsCommand(name: 'app:performance:test')]
-class PerformanceTestCliCommand extends Command
+final class PerformanceTestCli extends Command
 {
     private const LOOPS_NO = 10000000;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Cli;
 
 use App\Messenger\Command\TransactionExchangeCommand;
 use App\Dto\TransactionExchangeDto;
@@ -17,7 +17,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(name: 'app:transaction:exchange')]
-class TransactionExchangeCliCommand extends Command
+class TransactionExchangeCli extends Command
 {
     use GetEnvelopeResult;
 
@@ -49,7 +49,7 @@ class TransactionExchangeCliCommand extends Command
 
         try {
             $envelope = $this->commandBus->dispatch(new TransactionExchangeCommand(
-                exchangeDto: $exchangeDto,
+                transactionExchangeDto: $exchangeDto,
                 ip: 'cli-command',
             ));
 
@@ -59,9 +59,9 @@ class TransactionExchangeCliCommand extends Command
             $output->writeln([
                 'Transaction created:',
                 '===================',
-                'Id: ' . $transaction->id,
-                'Rate: ' . $transaction->exchangeRate,
-                'Target amount: ' . $transaction->targetAmount,
+                'Id: ' . $transaction->getId(),
+                'Rate: ' . $transaction->getExchangeRate(),
+                'Target amount: ' . $transaction->getTargetAmount(),
             ]);
         } catch (HandlerFailedException $exception) {
             $output->writeln([

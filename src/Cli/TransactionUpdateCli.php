@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Cli;
 
 use App\Messenger\Command\TransactionUpdateCommand;
 use App\Dto\TransactionUpdateDto;
@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\Exception\HandlerFailedException;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 #[AsCommand(name: 'app:transaction:update')]
-class TransactionUpdateCliCommand extends Command
+final class TransactionUpdateCli extends Command
 {
     use GetEnvelopeResult;
 
@@ -57,9 +57,9 @@ class TransactionUpdateCliCommand extends Command
             $output->writeln([
                 'Transaction updated:',
                 '===================',
-                'Rate: ' . $transaction->exchangeRate,
-                'Target amount: ' . $transaction->targetAmount,
-                'Target currency: ' . $transaction->targetCurrency,
+                'Rate: ' . $transaction->getExchangeRate(),
+                'Target amount: ' . $transaction->getTargetAmount(),
+                'Target currency: ' . $transaction->getTargetCurrency(),
             ]);
         } catch (HandlerFailedException $exception) {
             $output->writeln([

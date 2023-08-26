@@ -33,14 +33,14 @@ final class TransactionUpdateCommandHandler
         $transactionUpdateDto = $command->transactionUpdateDto;
 
         $exchangeConversionResult = $provider->convert(
-            baseAmount: new Money($transaction->baseAmount, new Currency($transaction->baseCurrency)),
-            baseCurrency: new Currency($transaction->baseCurrency),
+            baseAmount: new Money($transaction->getBaseAmount(), new Currency($transaction->getBaseCurrency())),
+            baseCurrency: new Currency($transaction->getBaseCurrency()),
             targetCurrency: new Currency($transactionUpdateDto->targetCurrency),
         );
 
-        $transaction->targetCurrency = $exchangeConversionResult->targetCurrency->getCode();
-        $transaction->targetAmount = (int) $exchangeConversionResult->targetAmount->getAmount();
-        $transaction->exchangeRate = $exchangeConversionResult->exchangeRate;
+        $transaction->setTargetCurrency($exchangeConversionResult->getTargetCurrency()->getCode())
+            ->setTargetAmount((int) $exchangeConversionResult->getTargetAmount()->getAmount())
+            ->setExchangeRate($exchangeConversionResult->getExchangeRate());
 
         $this->transactionRepository->flush();
 

@@ -9,7 +9,7 @@ use App\Dto\TransactionExchangeDto;
 final class TransactionExchangeCommand
 {
     public function __construct(
-        public readonly TransactionExchangeDto $exchangeDto,
+        public readonly TransactionExchangeDto $transactionExchangeDto,
         public readonly string $ip,
     ) {
     }

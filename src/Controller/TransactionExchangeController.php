@@ -33,7 +33,7 @@ final class TransactionExchangeController extends AbstractController
     ): Response {
         try {
             $envelope = $this->commandBus->dispatch(new TransactionExchangeCommand(
-                exchangeDto: $exchangeDto,
+                transactionExchangeDto: $exchangeDto,
                 ip: $request->getClientIp(),
             ));
 
