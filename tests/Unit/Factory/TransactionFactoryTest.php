@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Test\Unit\Factory;
+namespace App\Tests\Unit\Factory;
 
 use App\Entity\Transaction;
 use App\Factory\TransactionFactory;

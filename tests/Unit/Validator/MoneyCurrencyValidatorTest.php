@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Test\Unit\Validator;
+namespace App\Tests\Unit\Validator;
 
 use App\Validator\MoneyCurrency;
 use App\Validator\MoneyCurrencyValidator;

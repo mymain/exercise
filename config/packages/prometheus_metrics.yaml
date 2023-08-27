@@ -1,0 +1,15 @@
+artprima_prometheus_metrics:
+    namespace: app
+    storage: '%env(PROM_METRICS_DSN)%'
+
+    ignored_routes:
+        - prometheus_bundle_prometheus
+        - _wdt
+
+    disable_default_promphp_metrics: true
+    disable_default_metrics: true
+    enable_console_metrics: false
+
+when@test:
+    artprima_prometheus_metrics:
+        storage: in_memory

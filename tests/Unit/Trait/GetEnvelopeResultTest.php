@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Test\Unit\Trait;
+namespace App\Tests\Unit\Trait;
 
 use App\Entity\Transaction;
 use App\Trait\GetEnvelopeResult;
