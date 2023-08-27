@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\TransactionRepository;
+use App\Validator\MoneyCurrency;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,7 +38,8 @@ final class Transaction
 
     #[ORM\Column(length: 3)]
     #[Assert\NotBlank]
-    #[Assert\Length(exactly: 32)]
+    #[Assert\Length(exactly: 3)]
+    #[MoneyCurrency]
     private string $baseCurrency;
 
     #[ORM\Column(type: Types::INTEGER)]
@@ -46,7 +48,8 @@ final class Transaction
 
     #[ORM\Column(length: 3)]
     #[Assert\NotBlank]
-    #[Assert\Length(exactly: 32)]
+    #[Assert\Length(exactly: 3)]
+    #[MoneyCurrency]
     private string $targetCurrency;
 
     #[ORM\Column(type: Types::FLOAT)]
@@ -55,7 +58,7 @@ final class Transaction
 
     #[ORM\Column(length: 128)]
     #[Assert\NotBlank]
-    #[Assert\Length(max: 123)]
+    #[Assert\Length(max: 128)]
     private string $ip;
 
     public function getId(): int
