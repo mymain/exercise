@@ -9,7 +9,7 @@ use Money\Currency;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class MoneyCurrencyValidator extends ConstraintValidator
+final class MoneyCurrencyValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint): void
     {

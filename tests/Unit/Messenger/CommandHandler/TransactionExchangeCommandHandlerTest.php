@@ -6,41 +6,20 @@ namespace App\Tests\Unit\Messenger\CommandHandler;
 
 use App\Dto\TransactionExchangeDto;
 use App\Entity\Transaction;
-use App\Factory\TransactionFactoryInterface;
 use App\Messenger\Command\TransactionExchangeCommand;
 use App\Messenger\CommandHandler\TransactionExchangeCommandHandler;
-use App\Repository\TransactionRepositoryInterface;
-use App\Service\ExchangeRate\ExchangeRateConverterInterface;
-use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactoryInterface;
-use App\Service\ExchangeRate\Result\ExchangeRateConversionResultInterface;
 use Money\Currency;
 use Money\Money;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\HandledStamp;
 
-final class TransactionExchangeCommandHandlerTest extends TestCase
+final class TransactionExchangeCommandHandlerTest extends AbstractCommandHandlerTest
 {
     private TransactionExchangeCommandHandler $object;
 
-    private Transaction $transactionMock;
-    private MessageBusInterface $eventBusMock;
-    private TransactionFactoryInterface $transactionFactoryMock;
-    private TransactionRepositoryInterface $transactionRepositoryMock;
-    private ExchangeRateConverterInterface $exchangeRateConverterMock;
-    private ExchangeRateConversionResultInterface $exchangeConversionResultMock;
-    private ExchangeRateDataProviderFactoryInterface $exchangeRateDataProviderFactoryMock;
-
     public function setUp(): void
     {
-        $this->transactionMock = $this->createMock(Transaction::class);
-        $this->eventBusMock = $this->createMock(MessageBusInterface::class);
-        $this->transactionFactoryMock = $this->createMock(TransactionFactoryInterface::class);
-        $this->transactionRepositoryMock = $this->createMock(TransactionRepositoryInterface::class);
-        $this->exchangeRateConverterMock = $this->createMock(ExchangeRateConverterInterface::class);
-        $this->exchangeConversionResultMock = $this->createMock(ExchangeRateConversionResultInterface::class);
-        $this->exchangeRateDataProviderFactoryMock = $this->createMock(ExchangeRateDataProviderFactoryInterface::class);
+        parent::setUp();
 
         $this->object = new TransactionExchangeCommandHandler(
             exchangeRateDataProviderFactory: $this->exchangeRateDataProviderFactoryMock,

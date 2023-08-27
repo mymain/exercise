@@ -6,21 +6,14 @@ namespace App\Tests\Unit\Metrics;
 
 use App\Event\TransactionUpdatedEvent;
 use App\Metrics\TransactionUpdatedEventSubscriber;
-use PHPUnit\Framework\TestCase;
-use Prometheus\CollectorRegistry;
-use Prometheus\Counter;
 
-class TransactionUpdatedEventSubscriberTest extends TestCase
+class TransactionUpdatedEventSubscriberTest extends AbstractSubscriberTest
 {
     private TransactionUpdatedEventSubscriber $object;
 
-    private Counter $counterMock;
-    private CollectorRegistry $collectorRegistryMock;
-
     public function setUp(): void
     {
-        $this->counterMock = $this->createMock(Counter::class);
-        $this->collectorRegistryMock = $this->createMock(CollectorRegistry::class);
+        parent::setUp();
 
         $this->object = new TransactionUpdatedEventSubscriber();
 
@@ -29,9 +22,6 @@ class TransactionUpdatedEventSubscriberTest extends TestCase
 
     public function testInvoke(): void
     {
-        $this->counterMock->expects($this->once())
-            ->method('inc');
-
         $this->collectorRegistryMock->expects($this->once())
             ->method('getOrRegisterCounter')
             ->with(

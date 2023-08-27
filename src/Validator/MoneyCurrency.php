@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\LogicException;
 
 #[Attribute]
-class MoneyCurrency extends Constraint
+final class MoneyCurrency extends Constraint
 {
     public string $message = 'The currency "{{ string }}" is not valid';
 

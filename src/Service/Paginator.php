@@ -8,7 +8,7 @@ use App\Dto\PaginationDto;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator as OrmPaginator;
 
-final class Paginator
+class Paginator
 {
     private const ITEMS_PER_PAGE = 5;
 
