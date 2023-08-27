@@ -6,6 +6,7 @@ Project is dockerized and should be easy to set up locally. Just need to clone i
 
 ````
 make start
+make install
 make migrate
 ````
 

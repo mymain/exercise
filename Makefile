@@ -11,7 +11,7 @@ stop:
 	docker-compose down
 
 install:
-	docker exec $(docker-container) php composer.phar install
+	docker exec $(docker-container) composer install
 
 bash:
 	docker exec -it $(docker-container) bash
