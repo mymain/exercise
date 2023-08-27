@@ -40,7 +40,7 @@ final class TransactionExchangeController extends AbstractController
             /** @var Transaction $transaction */
             $transaction = $this->getEnvelopeResult($envelope);
         } catch (HandlerFailedException $exception) {
-            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->json($exception->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         return $this->json($transaction);

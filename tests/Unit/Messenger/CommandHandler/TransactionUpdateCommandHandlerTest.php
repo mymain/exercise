@@ -16,11 +16,16 @@ use App\Service\ExchangeRate\Result\ExchangeRateConversionResultInterface;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 final class TransactionUpdateCommandHandlerTest extends TestCase
 {
     private TransactionUpdateCommandHandler $object;
 
+    private Transaction $transactionMock;
+    private MessageBusInterface $eventBusMock;
     private TransactionFactoryInterface $transactionFactoryMock;
     private TransactionRepositoryInterface $transactionRepositoryMock;
     private ExchangeRateConverterInterface $exchangeRateConverterMock;
@@ -29,6 +34,8 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
 
     public function setUp(): void
     {
+        $this->transactionMock = $this->createMock(Transaction::class);
+        $this->eventBusMock = $this->createMock(MessageBusInterface::class);
         $this->transactionFactoryMock = $this->createMock(TransactionFactoryInterface::class);
         $this->transactionRepositoryMock = $this->createMock(TransactionRepositoryInterface::class);
         $this->exchangeRateConverterMock = $this->createMock(ExchangeRateConverterInterface::class);
@@ -39,6 +46,7 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
             exchangeRateDataProviderFactory: $this->exchangeRateDataProviderFactoryMock,
             transactionRepository: $this->transactionRepositoryMock,
             transactionFactory: $this->transactionFactoryMock,
+            eventBus: $this->eventBusMock,
         );
     }
 
@@ -49,14 +57,36 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
             targetCurrency: 'PLN',
         );
 
-        $transaction = (new Transaction())
-            ->setBaseCurrency('PLN')
-            ->setBaseAmount(100)
-            ->setTargetCurrency($transactionUpdateDto->targetCurrency);
+        $this->transactionMock->expects($this->once())
+            ->method('getId')
+            ->willReturn(324);
+
+        $this->transactionMock->expects($this->exactly(2))
+            ->method('getBaseCurrency')
+            ->willReturn('PLN');
+
+        $this->transactionMock->expects($this->once())
+            ->method('getBaseAmount')
+            ->willReturn(100);
+
+        $this->transactionMock->expects($this->once())
+            ->method('setTargetCurrency')
+            ->with('PLN')
+            ->willReturnSelf();
+
+        $this->transactionMock->expects($this->once())
+            ->method('setTargetAmount')
+            ->with(200)
+            ->willReturnSelf();
+
+        $this->transactionMock->expects($this->once())
+            ->method('setExchangeRate')
+            ->with(1.234)
+            ->willReturnSelf();
 
         $this->transactionRepositoryMock->expects($this->once())
             ->method('findById')
-            ->willReturn($transaction);
+            ->willReturn($this->transactionMock);
 
         $this->exchangeRateDataProviderFactoryMock->expects($this->once())
             ->method('getDataProvider')
@@ -65,8 +95,8 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
         $this->exchangeRateConverterMock->expects($this->once())
             ->method('convert')
             ->with(
-                new Money($transaction->getBaseAmount(), new Currency($transaction->getBaseCurrency())),
-                new Currency($transaction->getBaseCurrency()),
+                new Money(100, new Currency('PLN')),
+                new Currency('PLN'),
                 new Currency($transactionUpdateDto->targetCurrency),
             )
             ->willReturn($this->exchangeConversionResultMock);
@@ -87,6 +117,13 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
         $this->transactionRepositoryMock->expects($this->once())
             ->method('flush');
 
+        $this->eventBusMock->expects($this->once())
+            ->method('dispatch')
+            ->willReturn(new Envelope(
+                $this->object,
+                [new HandledStamp($this->object, 'handler-name')]
+            ));
+
         $transaction = $this->object->__invoke(new TransactionUpdateCommand(
             transactionUpdateDto: $transactionUpdateDto,
         ));
@@ -94,31 +131,6 @@ final class TransactionUpdateCommandHandlerTest extends TestCase
         $this->assertInstanceOf(
             Transaction::class,
             $transaction
-        );
-
-        $this->assertEquals(
-            100,
-            $transaction->getBaseAmount()
-        );
-
-        $this->assertEquals(
-            'PLN',
-            $transaction->getBaseCurrency()
-        );
-
-        $this->assertEquals(
-            200,
-            $transaction->getTargetAmount()
-        );
-
-        $this->assertEquals(
-            'PLN',
-            $transaction->getTargetCurrency()
-        );
-
-        $this->assertEquals(
-            1.234,
-            $transaction->getExchangeRate()
         );
     }
 }

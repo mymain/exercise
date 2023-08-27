@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Messenger\CommandHandler;
 
+use App\Event\TransactionUpdatedEvent;
 use App\Factory\TransactionFactoryInterface;
 use App\Messenger\Command\TransactionUpdateCommand;
 use App\Entity\Transaction;
@@ -13,8 +14,9 @@ use Money\Currency;
 use Money\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Component\Messenger\HandleTrait;
+use Symfony\Component\Messenger\MessageBusInterface;
 
-#[AsMessageHandler]
+#[AsMessageHandler(bus: 'command.bus')]
 final class TransactionUpdateCommandHandler
 {
     use HandleTrait;
@@ -23,6 +25,7 @@ final class TransactionUpdateCommandHandler
         private readonly ExchangeRateDataProviderFactoryInterface $exchangeRateDataProviderFactory,
         private readonly TransactionRepositoryInterface $transactionRepository,
         private readonly TransactionFactoryInterface $transactionFactory,
+        private readonly MessageBusInterface $eventBus,
     ) {
     }
 
@@ -43,7 +46,13 @@ final class TransactionUpdateCommandHandler
             ->setExchangeRate($exchangeConversionResult->getExchangeRate());
 
         $this->transactionRepository->flush();
+        $this->dispatchEvent($transaction);
 
         return $transaction;
+    }
+
+    private function dispatchEvent(Transaction $transaction): void
+    {
+        $this->eventBus->dispatch(new TransactionUpdatedEvent($transaction->getId()));
     }
 }

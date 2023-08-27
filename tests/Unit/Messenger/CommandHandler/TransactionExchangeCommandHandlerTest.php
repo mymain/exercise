@@ -16,11 +16,16 @@ use App\Service\ExchangeRate\Result\ExchangeRateConversionResultInterface;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\HandledStamp;
 
 final class TransactionExchangeCommandHandlerTest extends TestCase
 {
     private TransactionExchangeCommandHandler $object;
 
+    private Transaction $transactionMock;
+    private MessageBusInterface $eventBusMock;
     private TransactionFactoryInterface $transactionFactoryMock;
     private TransactionRepositoryInterface $transactionRepositoryMock;
     private ExchangeRateConverterInterface $exchangeRateConverterMock;
@@ -29,18 +34,19 @@ final class TransactionExchangeCommandHandlerTest extends TestCase
 
     public function setUp(): void
     {
+        $this->transactionMock = $this->createMock(Transaction::class);
+        $this->eventBusMock = $this->createMock(MessageBusInterface::class);
         $this->transactionFactoryMock = $this->createMock(TransactionFactoryInterface::class);
         $this->transactionRepositoryMock = $this->createMock(TransactionRepositoryInterface::class);
         $this->exchangeRateConverterMock = $this->createMock(ExchangeRateConverterInterface::class);
         $this->exchangeConversionResultMock = $this->createMock(ExchangeRateConversionResultInterface::class);
-        $this->exchangeRateDataProviderFactoryMock = $this->getMockBuilder(
-            ExchangeRateDataProviderFactoryInterface::class
-        )->disableOriginalConstructor()->getMock();
+        $this->exchangeRateDataProviderFactoryMock = $this->createMock(ExchangeRateDataProviderFactoryInterface::class);
 
         $this->object = new TransactionExchangeCommandHandler(
             exchangeRateDataProviderFactory: $this->exchangeRateDataProviderFactoryMock,
             transactionRepository: $this->transactionRepositoryMock,
             transactionFactory: $this->transactionFactoryMock,
+            eventBus: $this->eventBusMock,
         );
     }
 
@@ -68,19 +74,24 @@ final class TransactionExchangeCommandHandlerTest extends TestCase
             )
             ->willReturn($this->exchangeConversionResultMock);
 
-        $transaction = new Transaction();
-
         $this->transactionFactoryMock->expects($this->once())
             ->method('fromExchangeConversionResult')
             ->with(
                 $this->exchangeConversionResultMock,
                 'unit-test'
             )
-            ->willReturn($transaction);
+            ->willReturn($this->transactionMock);
 
         $this->transactionRepositoryMock->expects($this->once())
             ->method('persist')
-            ->with($transaction);
+            ->with($this->transactionMock);
+
+        $this->eventBusMock->expects($this->once())
+            ->method('dispatch')
+            ->willReturn(new Envelope(
+                $this->object,
+                [new HandledStamp($this->object, 'handler-name')]
+            ));
 
         $result = $this->object->__invoke(new TransactionExchangeCommand(
             transactionExchangeDto: $transactionExchangeDto,
