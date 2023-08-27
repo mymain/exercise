@@ -10,7 +10,7 @@ use App\Service\ExchangeRate\Exception\ProviderNotFoundException;
 use App\Service\ExchangeRate\ExchangeRateConverterInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 
-final class ExchangeRateDataProviderFactory
+final class ExchangeRateDataProviderFactory implements ExchangeRateDataProviderFactoryInterface
 {
     public function __construct(
         #[TaggedIterator('app.exchanger_rate_data_provider')]

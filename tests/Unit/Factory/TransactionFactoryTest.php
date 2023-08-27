@@ -8,7 +8,6 @@ use App\Entity\Transaction;
 use App\Factory\TransactionFactory;
 use App\Service\ExchangeRate\Result\ExchangeRateConversionResultInterface;
 use DateTimeImmutable;
-use DG\BypassFinals;
 use Money\Currency;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
@@ -25,8 +24,6 @@ final class TransactionFactoryTest extends TestCase
 
     public function setUp(): void
     {
-        BypassFinals::enable();
-
         $this->clockMock = $this->createMock(ClockInterface::class);
         $this->exchangeRateConversionResultMock = $this->createMock(
             ExchangeRateConversionResultInterface::class

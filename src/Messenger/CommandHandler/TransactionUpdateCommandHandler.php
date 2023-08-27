@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Messenger\CommandHandler;
 
+use App\Factory\TransactionFactoryInterface;
 use App\Messenger\Command\TransactionUpdateCommand;
 use App\Entity\Transaction;
-use App\Factory\TransactionFactory;
-use App\Repository\TransactionRepository;
-use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactory;
+use App\Repository\TransactionRepositoryInterface;
+use App\Service\ExchangeRate\Factory\ExchangeRateDataProviderFactoryInterface;
 use Money\Currency;
 use Money\Money;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -20,9 +20,9 @@ final class TransactionUpdateCommandHandler
     use HandleTrait;
 
     public function __construct(
-        private readonly ExchangeRateDataProviderFactory $exchangeRateDataProviderFactory,
-        private readonly TransactionRepository $transactionRepository,
-        private readonly TransactionFactory $transactionFactory,
+        private readonly ExchangeRateDataProviderFactoryInterface $exchangeRateDataProviderFactory,
+        private readonly TransactionRepositoryInterface $transactionRepository,
+        private readonly TransactionFactoryInterface $transactionFactory,
     ) {
     }
 

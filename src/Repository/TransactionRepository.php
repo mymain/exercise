@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
-final class TransactionRepository extends ServiceEntityRepository
+final class TransactionRepository extends ServiceEntityRepository implements TransactionRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {

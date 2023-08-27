@@ -10,7 +10,7 @@ use App\Enum\TransactionType;
 use App\Service\ExchangeRate\Result\ExchangeRateConversionResultInterface;
 use Symfony\Component\Clock\ClockInterface;
 
-final class TransactionFactory
+final class TransactionFactory implements TransactionFactoryInterface
 {
     public function __construct(
         private readonly ClockInterface $clock,
